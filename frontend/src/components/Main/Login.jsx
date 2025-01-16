@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -11,72 +11,82 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+ 
 
-
+import logo from "../../assets/images/logo.png";
+import image from "../../assets/images/files.png";
 
 const Login = () => {
+
   return (
-    <div className='flex justify-center '>
-    <Tabs defaultValue="account" className="w-[400px] ">
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="account">Account</TabsTrigger>
-        <TabsTrigger value="password">Password</TabsTrigger>
-      </TabsList>
-      <TabsContent value="account">
-        <Card>
-          <CardHeader>
-            <CardTitle>Account</CardTitle>
-            <CardDescription>
-              Make changes to your account here. Click save when you're done.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="space-y-1">
+    <>
+      <div className="flex min-h-screen ">
+        <section className="bg-[#56B8FF] lg:w-[35%] hidden lg:flex flex-col justify-center items-center gap-10">
+          <div className="flex items-center w-[70%] mx-auto gap-3 ">
+            <img src={logo} alt="" className="h-16 w-16" />
+            <p className="text-2xl font-semibold text-gray-100">Store-It</p>
+          </div>
+
+          <div className="w-[70%] space-y-5 ">
+            <h1 className="text-4xl font-bold text-stone-50">
+              Best Place to manage your files
+            </h1>
+            <p className=" text-stone-50">
+              {" "}
+              Awesome, we've created the perfect place for you to store all your
+              documents.
+            </p>
+          </div>
+          <div className="flex justify-center ">
+            <img src={image} alt="" className="h-60" />
+          </div>
+        </section>
+        <section className="flex items-center justify-center">
+        <Card className="w-[350px]">
+      <CardHeader>
+        <CardTitle>Create project</CardTitle>
+        <CardDescription>Deploy your new project in one-click.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <div className="grid w-full items-center gap-4">
+            <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" defaultValue="Pedro Duarte" />
+              <Input id="name" placeholder="Name of your project" />
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="username">Username</Label>
-              <Input id="username" defaultValue="@peduarte" />
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="framework">Framework</Label>
+              <Select>
+                <SelectTrigger id="framework">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent position="popper">
+                  <SelectItem value="next">Next.js</SelectItem>
+                  <SelectItem value="sveltekit">SvelteKit</SelectItem>
+                  <SelectItem value="astro">Astro</SelectItem>
+                  <SelectItem value="nuxt">Nuxt.js</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-          </CardContent>
-          <CardFooter>
-            <Button>Save changes</Button>
-          </CardFooter>
-        </Card>
-      </TabsContent>
-      <TabsContent value="password">
-        <Card>
-          <CardHeader>
-            <CardTitle>Password</CardTitle>
-            <CardDescription>
-              Change your password here. After saving, you'll be logged out.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="space-y-1">
-              <Label htmlFor="current">Current password</Label>
-              <Input id="current" type="password" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="new">New password</Label>
-              <Input id="new" type="password" />
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button>Save password</Button>
-          </CardFooter>
-        </Card>
-      </TabsContent>
-    </Tabs>
+          </div>
+        </form>
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <Button variant="outline">Cancel</Button>
+        <Button>Deploy</Button>
+      </CardFooter>
+    </Card>
+          
+        </section>
+      </div>
+    </>
+  );
+};
 
-    </div>
-  )
-}
-
-export default Login
+export default Login;
