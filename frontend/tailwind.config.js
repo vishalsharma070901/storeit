@@ -2,6 +2,9 @@
 export default {
     darkMode: ["class"],
     content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
+	fontFamily: {
+        poppins: ['Poppins', 'sans-serif'],
+      },
   theme: {
   	extend: {
   		borderRadius: {

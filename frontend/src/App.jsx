@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import './App.css'
 import { Button } from "@/components/ui/button"
-import Login from './components/Main/Login'
+import Layout from './components/Main/Layout'
+import Register from './components/Main/Register'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -9,7 +10,8 @@ function App() {
   return (
   <div>
    
-   <Login/>
+   <Layout Register={<Register/>}/>
+
   </div>
  
   )
