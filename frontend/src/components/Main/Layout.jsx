@@ -31,8 +31,8 @@ const Layout = () => {
           </div>
         </section>
         <section className="flex items-center justify-center flex-1 flex-col">
-         {/* <Register/> */}
-         <Login/>
+         <Register/>
+         {/* <Login/> */}
         </section>
       </div>
     </>

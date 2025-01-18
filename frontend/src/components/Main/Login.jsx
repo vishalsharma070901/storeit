@@ -2,9 +2,11 @@ import React from "react";
 import { Label } from "@/components/ui/label";
 import logo from "../../assets/images/logo.png";
 
+
+
 const Login = () => {
   return (
-    <div>
+    <div className="">
       <div className="flex justify-center items-center lg:hidden mb-10 gap-3">
         <img src={logo} alt="" className="h-20" />
         <p className="text-4xl font-semibold text-gray-700">Store-It</p>
@@ -21,7 +23,7 @@ const Login = () => {
               nsme="email"
               type="email"
               placeholder="Enter your email"
-              className="outline-none shadow-md py-2.5 px-2 rounded-xl"
+              className="outline-none shadow-md  py-2.5 px-2 rounded-xl focus:outline-[#56B8FF] focus:shadow-none"
             />
           </div>
           <div className="grid w-full max-w-sm items-center gap-1.5">
@@ -30,7 +32,7 @@ const Login = () => {
               name="name"
               type="password"
               placeholder="Enter Password"
-              className="outline-none shadow-md py-2.5 px-2 rounded-xl"
+              className="outline-none shadow-md py-2.5 px-2 rounded-xl focus:outline-[#56B8FF] focus:shadow-none"
             />
           </div>
           <div className="grid w-full max-w-sm items-center gap-1.5 ">
@@ -43,12 +45,14 @@ const Login = () => {
           </div>
           <div className="flex w-full max-w-sm justify-center items-center gap-1.5 ">
             <p>Don't have an account ? </p>{" "}
-            <a className="text-[#56B8FF]" href="/login">
+            <a className="text-[#56B8FF]" href="/register">
               Login
             </a>
           </div>
         </div>
       </form>
+
+      
     </div>
   );
 };
