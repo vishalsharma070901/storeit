@@ -46,7 +46,7 @@ const Login = () => {
           <div className="flex w-full max-w-sm justify-center items-center gap-1.5 ">
             <p>Don't have an account ? </p>{" "}
             <a className="text-[#56B8FF]" href="/register">
-              Login
+              Register
             </a>
           </div>
         </div>
