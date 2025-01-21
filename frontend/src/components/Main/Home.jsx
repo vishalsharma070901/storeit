@@ -5,7 +5,8 @@ import { MdDashboard } from "react-icons/md";
 import { FaImages } from "react-icons/fa";
 import image from "../../assets/images/files.png";
 import { MdPermMedia } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { FaCloudUploadAlt } from "react-icons/fa";
 
 const Home = ({ children }) => {
   const [openMenue, setOpenMenue] = useState(false);
@@ -18,6 +19,7 @@ const Home = ({ children }) => {
   const handleSideBar = () => {
     setOpenSideBar(!openSideBar);
   };
+  const isActive = (path) => location.pathname === path;
 
   return (
     <>
@@ -146,12 +148,16 @@ const Home = ({ children }) => {
         aria-label="Sidebar"
       >
         <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
-          <ul className="space-y-2 font-medium">
+          <ul className=" font-medium gap-5 flex flex-col">
             <Link to={"/dashboard"}>
               <li>
                 <a
                   href="#"
-                  className="flex items-center p-2 text-gray-900 rounded-full  dark:text-white hover:bg-[#56B8FF] hover:text-white  group"
+                  className={`flex items-center p-2 rounded-full ${
+                    isActive("/dashboard")
+                      ? "bg-[#56B8FF] text-white"
+                      : "text-gray-900 dark:text-white hover:bg-[#56B8FF] hover:text-white"
+                  }`}
                 >
                   <span className="text-2xl">
                     {" "}
@@ -165,7 +171,11 @@ const Home = ({ children }) => {
               <li>
                 <a
                   href="#"
-                  className="flex items-center p-2 text-gray-700 rounded-full dark:text-white hover:bg-[#56B8FF] hover:text-white group "
+                  className={`flex items-center p-2 rounded-full ${
+                    isActive("/documents")
+                      ? "bg-[#56B8FF] text-white"
+                      : "text-gray-900 dark:text-white hover:bg-[#56B8FF] hover:text-white"
+                  }`}
                 >
                   <span className="text-2xl">
                     {" "}
@@ -181,7 +191,11 @@ const Home = ({ children }) => {
               <li>
                 <a
                   href="#"
-                  className="flex items-center p-2 text-gray-900 rounded-full  dark:text-white hover:bg-[#56B8FF] hover:text-white  group"
+                  className={`flex items-center p-2 rounded-full ${
+                    isActive("/images")
+                      ? "bg-[#56B8FF] text-white"
+                      : "text-gray-900 dark:text-white hover:bg-[#56B8FF] hover:text-white"
+                  }`}
                 >
                   <span className="text-2xl">
                     {" "}
@@ -196,7 +210,11 @@ const Home = ({ children }) => {
               <li>
                 <a
                   href="#"
-                  className="flex items-center p-2 text-gray-900 rounded-full  dark:text-white hover:bg-[#56B8FF] hover:text-white  group"
+                  className={`flex items-center p-2 rounded-full ${
+                    isActive("/media")
+                      ? "bg-[#56B8FF] text-white"
+                      : "text-gray-900 dark:text-white hover:bg-[#56B8FF] hover:text-white"
+                  }`}
                 >
                   <span className="text-2xl">
                     {" "}
@@ -211,14 +229,27 @@ const Home = ({ children }) => {
         </div>
       </aside>
 
-      <div className="p-4 sm:ml-64">
-        <div
-          onClick={() => setOpenSideBar(false)}
-          className="p-4  bg-blue-100 h-screen rounded-lg dark:border-gray-700 mt-14"
-        >
+      <div 
+       onClick={() => {
+        setOpenMenue(false);
+        setOpenSideBar(false);
+      }}
+      className="p-4 sm:ml-64  bg-blue-100 h-[100vh] rounded-lg dark:border-gray-700 mt-14 relative">
+     
           {children}
+          <div className= " bg-[#56B8FF] text-white  w-44 flex px-10 py-3 justify-center  rounded-full cursor-pointer absolute bottom-10 lef-0 right-10  ">
+            <span className="text-2xl">
+              <FaCloudUploadAlt />
+            </span>
+            <input
+              type="file"
+              id="fileInput"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <span className="ml-1  font-medium">Upload</span>
+          </div>
         </div>
-      </div>
+ 
     </>
   );
 };
