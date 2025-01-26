@@ -3,10 +3,11 @@ import logo from "../../assets/images/logo.png";
 import { FaFolder } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import { FaImages } from "react-icons/fa";
-import image from "../../assets/images/files.png";
 import { MdPermMedia } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 import { FaCloudUploadAlt } from "react-icons/fa";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+
 
 const Home = ({ children }) => {
   const [openMenue, setOpenMenue] = useState(false);
@@ -108,7 +109,7 @@ const Home = ({ children }) => {
                     <li>
                       <a
                         href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#56B8FF] dark:text-gray-300  dark:hover:text-white"
                         role="menuitem"
                       >
                         Settings
@@ -117,7 +118,7 @@ const Home = ({ children }) => {
                     <li>
                       <a
                         href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#56B8FF] dark:text-gray-300  dark:hover:text-white"
                         role="menuitem"
                       >
                         Earnings
@@ -126,7 +127,7 @@ const Home = ({ children }) => {
                     <li>
                       <a
                         href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#56B8FF] dark:text-gray-300  dark:hover:text-white"
                         role="menuitem"
                       >
                         Sign out
@@ -229,15 +230,21 @@ const Home = ({ children }) => {
         </div>
       </aside>
 
-      <div 
-       onClick={() => {
-        setOpenMenue(false);
-        setOpenSideBar(false);
-      }}
-      className="p-4 sm:ml-64  bg-blue-100 h-[100vh] rounded-lg dark:border-gray-700 mt-14 relative">
-     
-          {children}
-          <div className= " bg-[#56B8FF] text-white  w-44 flex px-10 py-3 justify-center  rounded-full cursor-pointer absolute bottom-10 lef-0 right-10  ">
+      <div
+        onClick={() => {
+          setOpenMenue(false);
+          setOpenSideBar(false);
+        }}
+        className="p-4 sm:ml-64 h-[100vh] rounded-lg dark:border-gray-700   relative"
+      > 
+        <div className="flex justify-between mt-14 flex-col sm:flex-row items-center gap-3">
+          <div className=" p-2 rounded-full flex items-center w-[50%] border-2 border-[#56B8FF]  ">
+            <input type="text" className="bg-transparent focus:outline-none w-full" placeholder="Search here" />
+            <span ><FaMagnifyingGlass />
+            </span>
+          </div>
+
+          <div className=" bg-[#56B8FF] text-white  w-44 flex px-10 py-3 justify-center  rounded-full cursor-pointer relative   ">
             <span className="text-2xl">
               <FaCloudUploadAlt />
             </span>
@@ -249,7 +256,9 @@ const Home = ({ children }) => {
             <span className="ml-1  font-medium">Upload</span>
           </div>
         </div>
- 
+        {children}
+      </div>
+   
     </>
   );
 };
