@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import logo from "../../assets/images/logo.png";
 
-import Modal from "./Modal";
+import Modal from "../Reusable/Modal";
 
 const Register = () => {
  

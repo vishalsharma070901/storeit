@@ -55,7 +55,7 @@ const OtpModal = ({ email, setOpen }) => {
     e.preventDefault();
     const otp = inputRefs.current.map((input) => input.value).join("");
     console.log("OTP:", otp);
-    // Perform your OTP submission logic here
+    
   };
 
   return (

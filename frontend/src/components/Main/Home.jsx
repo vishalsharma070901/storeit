@@ -7,7 +7,7 @@ import { MdPermMedia } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-
+import "../../App.css"
 
 const Home = ({ children }) => {
   const [openMenue, setOpenMenue] = useState(false);
@@ -24,7 +24,7 @@ const Home = ({ children }) => {
 
   return (
     <>
-      <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+      <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 ">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
@@ -235,16 +235,21 @@ const Home = ({ children }) => {
           setOpenMenue(false);
           setOpenSideBar(false);
         }}
-        className="p-4 sm:ml-64 h-[100vh] rounded-lg dark:border-gray-700   relative"
-      > 
-        <div className="flex justify-between mt-14 flex-col sm:flex-row items-center gap-3">
-          <div className=" p-2 rounded-full flex items-center w-[50%] border-2 border-[#56B8FF]  ">
-            <input type="text" className="bg-transparent focus:outline-none w-full" placeholder="Search here" />
-            <span ><FaMagnifyingGlass />
+        className="p-4 sm:ml-64 h-[100vh] rounded-lg dark:border-gray-700 relative  "
+      >
+        <div className="fixed top-14 left-0 right-0 sm:left-64 bg-white dark:bg-gray-800 p-4 flex justify-between  items-center border-t-2">
+          <div className="p-2 px-3 rounded-full flex items-center w-[50%] border-2 border-[#56B8FF]">
+            <input
+              type="text"
+              className="bg-transparent focus:outline-none w-full"
+              placeholder="Search here"
+            />
+            <span>
+              <FaMagnifyingGlass />
             </span>
           </div>
 
-          <div className=" bg-[#56B8FF] text-white  w-44 flex px-10 py-3 justify-center  rounded-full cursor-pointer relative   ">
+          <div className="bg-[#56B8FF] text-white w-44 flex px-10 py-3 justify-center rounded-full cursor-pointer relative">
             <span className="text-2xl">
               <FaCloudUploadAlt />
             </span>
@@ -253,12 +258,13 @@ const Home = ({ children }) => {
               id="fileInput"
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
-            <span className="ml-1  font-medium">Upload</span>
+            <span className="ml-1 font-medium">Upload</span>
           </div>
         </div>
-        {children}
+
+        {/* Scrollable Content */}
+        <div className="mt-28 overflow-y-auto scrollbar-hide  p-5  max-h-[calc(100vh-8rem)] bg-gray-100  rounded-3xl">{children}</div>
       </div>
-   
     </>
   );
 };

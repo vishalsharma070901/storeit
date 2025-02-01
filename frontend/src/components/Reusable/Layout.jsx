@@ -1,8 +1,8 @@
 import React from "react";
 import logo from "../../assets/images/logo.png";
 import image from "../../assets/images/files.png";
-import Register from "./Register";
-import Login from "./Login";
+import Register from "../Main/Register";
+import Login from "../Main/Login";
 
 
 const Layout = ({children}) => {

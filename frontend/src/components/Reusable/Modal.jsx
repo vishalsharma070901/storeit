@@ -7,7 +7,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import OtpModal from "./OtpModal";
+import OtpModal from "../Main/OtpModal";
 
 const Modal = ({ open, setOpen, email }) => {
   return (
