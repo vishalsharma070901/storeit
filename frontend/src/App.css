@@ -1,0 +1,14 @@
+h1 {
+    font-family: 'Poppins', sans-serif;
+   
+  }
+
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* For Internet Explorer */
+    scrollbar-width: none;     /* For Firefox */
+  }
