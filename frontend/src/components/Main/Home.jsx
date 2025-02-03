@@ -9,6 +9,8 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import "../../App.css"
 
+
+
 const Home = ({ children }) => {
   const [openMenue, setOpenMenue] = useState(false);
   const [openSideBar, setOpenSideBar] = useState(false);
@@ -235,9 +237,9 @@ const Home = ({ children }) => {
           setOpenMenue(false);
           setOpenSideBar(false);
         }}
-        className="p-4 sm:ml-64 h-[100vh] rounded-lg dark:border-gray-700 relative  "
+        className="p-4 sm:ml-64 h-[100vh] rounded-lg dark:border-gray-700 relative   "
       >
-        <div className="fixed top-14 left-0 right-0 sm:left-64 bg-white dark:bg-gray-800 p-4 flex justify-between  items-center border-t-2">
+        <div className="fixed top-14 left-0 right-0 sm:left-64 bg-white dark:bg-gray-800 p-4 flex justify-between sm:z-50  items-center border-t-2">
           <div className="p-2 px-3 rounded-full flex items-center w-[50%] border-2 border-[#56B8FF]">
             <input
               type="text"
@@ -263,7 +265,7 @@ const Home = ({ children }) => {
         </div>
 
         {/* Scrollable Content */}
-        <div className="mt-28 overflow-y-auto scrollbar-hide  p-5  max-h-[calc(100vh-8rem)] bg-gray-100  rounded-3xl">{children}</div>
+        <div className="mt-28 overflow-y-auto scrollbar-hide  p-5  max-h-[calc(100vh-8rem)  rounded-3xl">{children}</div>
       </div>
     </>
   );

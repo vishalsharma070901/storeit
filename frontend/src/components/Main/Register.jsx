@@ -3,15 +3,42 @@ import { Label } from "@/components/ui/label";
 import logo from "../../assets/images/logo.png";
 
 import Modal from "../Reusable/Modal";
+import axios from "axios";
 
 const Register = () => {
  
   const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name:'',
+    email:'',
+    password:''
+  })
+  
+  const handleChange = (e)=>{
+    let name =  e.target.name;
+    let value =  e.target.value;
+     
+    setFormData({
+      ...formData,
+      [name]:value
+    })
+  }
+  const handleFormSubmit = async(e) => {
+    try {
+      e.preventDefault();
+        
+       const respose = await axios.post("http://localhost:8000/api/auth/otp-verification",
+       {
+        username:formData.name,
+        email:formData.email
+       })
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-
-    console.log("Form submitted");
+      console.log(respose.data)
+      console.log("Form submitted" , formData);
+    } catch (error) {
+       console.log(error)
+    }
+   
   };
 
   return (
@@ -29,8 +56,10 @@ const Register = () => {
       <form onSubmit={handleFormSubmit}>
         <div className="grid w-full items-center gap-4">
           <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">User Name</Label>
             <input
+              onChange={handleChange}
+              value={formData.name}
               name="name"
               id="name"
               placeholder="Enter your name"
@@ -40,6 +69,8 @@ const Register = () => {
           <div className="grid w-full max-w-sm items-center gap-1.5">
             <Label htmlFor="email">Email</Label>
             <input
+              onChange={handleChange}
+              value={formData.email}
               name="email"
               type="email"
               placeholder="Enter your email"
@@ -49,6 +80,8 @@ const Register = () => {
           <div className="grid w-full max-w-sm items-center gap-1.5">
             <Label htmlFor="password">Password</Label>
             <input
+              onChange={handleChange}
+              value={formData.password}
               name="password"
               type="password"
               placeholder="Create Password"
@@ -58,7 +91,9 @@ const Register = () => {
           <div className="grid w-full max-w-sm items-center gap-1.5">
            
               <button
-                onClick={()=>setOpen(true)}
+                onClick={(e)=>{
+                  handleFormSubmit(e);
+                  setOpen(true)}}
                 type="button" // Important: Use type="button" to avoid triggering form submit
                 className="bg-[#56B8FF] px-5 py-2 rounded-full hover:opacity-85 text-white"
               >
@@ -75,7 +110,7 @@ const Register = () => {
         </div>
       </form>
       <div >
-        <Modal open={open} setOpen={setOpen} email={"vishal.sharma@gmail.com"}/>
+        <Modal open={open} setOpen={setOpen} email={formData.email}/>
       </div>
     </div>
   );

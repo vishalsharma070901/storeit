@@ -15,7 +15,7 @@ const NormalCard = ({ key, title, description, icon }) => {
         <div className="text-3xl">{icon}</div>
         <div
           className="flex flex-col items-center gap-4"
-          onMouseEnter={handleMouseEnter} 
+          onMouseEnter={handleMouseEnter} // Open menu on hover
         >
           <div className="text-2xl">
             <button>

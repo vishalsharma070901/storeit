@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import './App.css'
+import "@radix-ui/themes/styles.css";
+import { Theme } from "@radix-ui/themes";
 
+import { Toaster } from "@/components/ui/toaster"
 import Layout from './components/Reusable/Layout'
 import Register from './components/Main/Register'
 import Home from './components/Main/Home'
@@ -14,6 +17,8 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
+    <Theme> 
+        <Toaster />
   <Router>
     <Routes>
     <Route path="/" element={<Navigate to="/login" replace />}/>
@@ -27,6 +32,7 @@ function App() {
     </Routes>
   </Router>
 
+</Theme>
  
  
   )
