@@ -1,44 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Label } from "@/components/ui/label";
 import logo from "../../assets/images/logo.png";
-
+import myContext from "@/Context/MyContext";
 import Modal from "../Reusable/Modal";
 import axios from "axios";
 
+
+
 const Register = () => {
- 
+  const context = useContext(myContext);
+  const { setOtp, otp } = context;
+
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
-    name:'',
-    email:'',
-    password:''
-  })
-  
-  const handleChange = (e)=>{
-    let name =  e.target.name;
-    let value =  e.target.value;
-     
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+
     setFormData({
       ...formData,
-      [name]:value
-    })
-  }
-  const handleFormSubmit = async(e) => {
+      [name]: value,
+    });
+  };
+  const handleFormSubmit = async (e) => {
     try {
       e.preventDefault();
-        
-       const respose = await axios.post("http://localhost:8000/api/auth/otp-verification",
-       {
-        username:formData.name,
-        email:formData.email
-       })
-
-      console.log(respose.data)
-      console.log("Form submitted" , formData);
+      if (formData.email != "") {
+        setOpen(true);
+        const respose = await axios.post(
+          "http://localhost:8000/api/auth/otp-verification",
+          {
+            username: formData.name,
+            email: formData.email,
+          }
+        );
+        setOtp(respose.data.otp);
+        // console.log("Form submitted" , formData);
+      } else {
+        console.log("Please enter the email");
+      }
     } catch (error) {
-       console.log(error)
+      console.log(error);
     }
-   
   };
 
   return (
@@ -89,17 +97,15 @@ const Register = () => {
             />
           </div>
           <div className="grid w-full max-w-sm items-center gap-1.5">
-           
-              <button
-                onClick={(e)=>{
-                  handleFormSubmit(e);
-                  setOpen(true)}}
-                type="button" // Important: Use type="button" to avoid triggering form submit
-                className="bg-[#56B8FF] px-5 py-2 rounded-full hover:opacity-85 text-white"
-              >
-                Sign up
-              </button>
-           
+            <button
+              onClick={(e) => {
+                handleFormSubmit(e);
+              }}
+              type="button" // Important: Use type="button" to avoid triggering form submit
+              className="bg-[#56B8FF] px-5 py-2 rounded-full hover:opacity-85 text-white"
+            >
+              Sign up
+            </button>
           </div>
           <div className="flex w-full max-w-sm justify-center items-center gap-1.5 ">
             <p>Already have an account?</p>{" "}
@@ -109,8 +115,8 @@ const Register = () => {
           </div>
         </div>
       </form>
-      <div >
-        <Modal open={open} setOpen={setOpen} email={formData.email}/>
+      <div>
+        <Modal open={open} setOpen={setOpen} email={formData.email} otp={otp} username={formData.name} />
       </div>
     </div>
   );

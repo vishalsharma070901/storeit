@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
-
+import MyState from './Context/MyState';
 import { Toaster } from "@/components/ui/toaster"
 import Layout from './components/Reusable/Layout'
 import Register from './components/Main/Register'
@@ -17,6 +17,10 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
+    <MyState>
+
+
+    
     <Theme> 
         <Toaster />
   <Router>
@@ -34,7 +38,7 @@ function App() {
 
 </Theme>
  
- 
+</MyState>
   )
 }
 

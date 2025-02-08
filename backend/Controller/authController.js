@@ -56,18 +56,16 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const otpVerification = asyncHandler(async (req, res) => {
-    console.log(req.body);
-    try {
-      const { username, email } = req.body;
-  
-      // Function to generate a random 4-digit OTP
-      const generateRandomFourDigit = () => {
-        return Math.floor(1000 + Math.random() * 9000);
-      };
-  
-      const otp = generateRandomFourDigit(); // Call the function to generate OTP
-  
-      const text = `Hi ${username},
+  try {
+    const { username, email } = req.body;
+
+    const generateRandomFourDigit = () => {
+      return Math.floor(1000 + Math.random() * 9000);
+    };
+
+    const otp = generateRandomFourDigit(); 
+
+    const text = `Hi ${username},
   
   Thank you for choosing StoreIt! We're almost there.
   
@@ -80,40 +78,39 @@ const otpVerification = asyncHandler(async (req, res) => {
   
   Thank you,  
   The StoreIt Team`;
-  
-      const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
-        auth: {
-          user: EMAIL,
-          pass: PASSWORD,
-        },
-      });
-  
-      let message = {
-        from: {
-          name: "StoreIt",
-          address: EMAIL,
-        },
-        to: email,
-        subject: "One Time Password for Registration", 
-        text: text,
-      };
-  
-      const info = await transporter.sendMail(message);
-      
-      return res.status(200).json({
-        msg: "Successfully sent mail",
-        otp, 
-        info: info.messageId,
-        preview: nodemailer.getTestMessageUrl(info),
-      });
-    } catch (error) {
-      console.error("Error sending email:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-  });
-  
 
-module.exports = { register, login, otpVerification  };
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: EMAIL,
+        pass: PASSWORD,
+      },
+    });
+
+    let message = {
+      from: {
+        name: "StoreIt",
+        address: EMAIL,
+      },
+      to: email,
+      subject: "One Time Password for Registration",
+      text: text,
+    };
+
+    // const info = await transporter.sendMail(message);
+
+    return res.status(200).json({
+      msg: "Successfully sent mail",
+      otp,
+      // info: info.messageId,
+      // preview: nodemailer.getTestMessageUrl(info),
+    });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+module.exports = { register, login, otpVerification };
