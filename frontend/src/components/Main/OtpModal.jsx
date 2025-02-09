@@ -60,16 +60,23 @@ const OtpModal = ({ email, username, setOpen, open }) => {
     setLoading(true);
     e.preventDefault();
 
-    setTimeout(() => {
+ 
       console.log("verifiying otp");
       const OTP = inputRefs.current.map((input) => input.value).join("");
       let num = Number(OTP);
+
+      setTimeout(() => {
       if (num === otp) {
         console.log("correect opt");
-        setOpen(false);
       }
-     }, 2000); 
-    setLoading(false);
+      else {
+        setOpen(true);
+      }
+      setLoading(false);
+   
+     }, 5000); 
+  
+
   };
 
   const handleOtp = async () => {
@@ -89,8 +96,7 @@ const OtpModal = ({ email, username, setOpen, open }) => {
           }
         );
         setOtp(respose.data.otp);
-        handleSubmit();
-        // console.log("Form submitted" , formData);
+    
       } else {
         console.log("Please enter the email");
       }
