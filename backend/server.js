@@ -6,6 +6,7 @@ const authRouter =  require("./Router/authRoute")
 const app = express();
 app.use(bodyParser.json());
 const cors = require("cors");
+const FileHandelingRouter = require("./Router/FileHandelingRouter")
 
 
 app.use(cors({
@@ -94,6 +95,7 @@ app.use(cors({
 // });
 
 app.use("/api/auth", authRouter )
+app.use("/api/getFile",FileHandelingRouter)
 
 // // Start Server
 const PORT = process.env.PORT || 8000;

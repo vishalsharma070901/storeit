@@ -99,13 +99,13 @@ const otpVerification = asyncHandler(async (req, res) => {
       text: text,
     };
 
-    // const info = await transporter.sendMail(message);
+    const info = await transporter.sendMail(message);
 
     return res.status(200).json({
       msg: "Successfully sent mail",
       otp,
-      // info: info.messageId,
-      // preview: nodemailer.getTestMessageUrl(info),
+      info: info.messageId,
+      preview: nodemailer.getTestMessageUrl(info),
     });
   } catch (error) {
     console.error("Error sending email:", error);

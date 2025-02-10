@@ -9,14 +9,10 @@ import axios from "axios";
 
 const Register = () => {
   const context = useContext(myContext);
-  const { setOtp, otp } = context;
+  const { setOtp, otp, formData, setFormData } = context;
 
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+
 
   const handleChange = (e) => {
     let name = e.target.name;
@@ -40,7 +36,7 @@ const Register = () => {
           }
         );
         setOtp(respose.data.otp);
-        // console.log("Form submitted" , formData);
+       
       } else {
         console.log("Please enter the email");
       }

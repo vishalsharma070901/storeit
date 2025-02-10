@@ -3,11 +3,18 @@ import MyContext from './myContext';
 
 
 function MyState({ children }) {    
- const[otp, setOtp] = useState(0)
+ const[otp, setOtp] = useState(0);
+   const [formData, setFormData] = useState({
+     name: "",
+     email: "",
+     password: "",
+   });
     return (
         <MyContext.Provider value={{
             otp,
-            setOtp
+            setOtp,
+            formData,
+            setFormData
         }}>
             {children}
         </MyContext.Provider>
