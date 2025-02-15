@@ -7,7 +7,7 @@ const app = express();
 app.use(bodyParser.json());
 const cors = require("cors");
 const FileHandelingRouter = require("./Router/FileHandelingRouter")
-
+const  fileUploadRouter = require("./Router/fileUploadRoute")
 
 app.use(cors({
     origin: 'http://localhost:5173'
@@ -96,6 +96,7 @@ app.use(cors({
 
 app.use("/api/auth", authRouter )
 app.use("/api/getFile",FileHandelingRouter)
+app.use("/api/upload-files",fileUploadRouter)
 
 // // Start Server
 const PORT = process.env.PORT || 8000;

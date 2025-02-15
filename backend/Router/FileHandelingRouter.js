@@ -1,8 +1,10 @@
 const express = require('express');
-const { getObject } = require('../Controller/FileHandlingController');
+const fileHandelingController = require('../Controller/FileHandlingController');
 
 const router = express.Router();
 
-router.get('/get-presigned-url/:key', getObject);
+router.route("/get-presigned-url/:key").get(fileHandelingController.getObject);
+router.route("/get-objects/:folder/:subfolder").get(fileHandelingController.listObjectsInFolder);
+
 
 module.exports = router;

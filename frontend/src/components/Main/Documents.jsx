@@ -1,8 +1,9 @@
-import React from "react";
+import React,{useContext} from "react";
 import NormalCard from "../Reusable/NormalCard";
 import { IoIosFolderOpen } from "react-icons/io";
 import { FaImage, FaVideo } from "react-icons/fa6";
 import { IoPieChartSharp } from "react-icons/io5";
+import myContext from "@/Context/MyContext";
 
 const cardDetails = [
   {
@@ -151,7 +152,13 @@ const cardDetails = [
   },
 ];
 
+
+
 const Documents = () => {
+  const context = useContext(myContext);
+const { documents } = context;
+
+console.log(documents)
   return (
     <div>
       <div className="bg-[#56B8FF] text-white  rounded-2xl p-4 mx-auto">

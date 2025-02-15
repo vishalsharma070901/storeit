@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import logo from "../../assets/images/logo.png";
 import { FaFolder } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
@@ -8,12 +8,18 @@ import { Link, useLocation } from "react-router-dom";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import "../../App.css"
+import myContext from "@/Context/MyContext";
+import axios from "axios";
 
 
 
 const Home = ({ children }) => {
+  const context =  useContext(myContext);
   const [openMenue, setOpenMenue] = useState(false);
   const [openSideBar, setOpenSideBar] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState("");
+  const { setDocuments, setImages, setMedia } = context;
 
   const handleMenue = () => {
     setOpenMenue(!openMenue);
@@ -23,6 +29,80 @@ const Home = ({ children }) => {
     setOpenSideBar(!openSideBar);
   };
   const isActive = (path) => location.pathname === path;
+
+
+
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    setMessage("");
+
+    try {
+      const fileName = encodeURIComponent(file.name);
+      const fileType = file.type;
+    
+      console.log(fileType);
+      const response = await fetch("http://localhost:8000/api/upload-files/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileName, fileType }),
+      });
+
+      if (!response.ok) console.log("Failed to get presigned URL");
+
+      const { url } = await response.json();
+
+
+      const uploadResponse = await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": fileType },
+        body: file,
+      });
+
+      if (!uploadResponse.ok) throw new Error("Upload failed");
+
+      setMessage("File uploaded successfully!");
+    } catch (error) {
+      setMessage(error.message);
+    }
+  };
+
+  const loadDocuments = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/api/getFile/get-objects/vishal/documents");
+      if(response.status === 200) {
+      const data = response.data;
+      setDocuments(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const loadImages = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/api/getFile/get-objects/vishal/images");
+      if(response.status === 200) {
+      const data = response.data;
+      setImages(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const loadMedia = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/api/getFile/get-objects/vishal/media");
+      if(response.status === 200) {
+      const data = response.data;
+      setMedia(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
 
   return (
     <>
@@ -171,7 +251,9 @@ const Home = ({ children }) => {
               </li>
             </Link>
             <Link to={"/documents"}>
-              <li>
+              <li
+              onClick={loadDocuments}
+              >
                 <a
                   href="#"
                   className={`flex items-center p-2 rounded-full ${
@@ -191,7 +273,9 @@ const Home = ({ children }) => {
               </li>
             </Link>
             <Link to={"/images"}>
-              <li>
+              <li
+              onClick={loadImages}
+              >
                 <a
                   href="#"
                   className={`flex items-center p-2 rounded-full ${
@@ -210,7 +294,10 @@ const Home = ({ children }) => {
               </li>
             </Link>
             <Link to={"/media"}>
-              <li>
+              <li
+              
+              onClick={loadMedia}
+              >
                 <a
                   href="#"
                   className={`flex items-center p-2 rounded-full ${
@@ -256,16 +343,21 @@ const Home = ({ children }) => {
               <FaCloudUploadAlt />
             </span>
             <input
+              onChange={handleFileUpload}
               type="file"
               id="fileInput"
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
-            <span className="ml-1 font-medium">Upload</span>
+            <span className="ml-1 font-medium">{uploading ? "Uploading..." : "Upload"}</span>
+   
           </div>
         </div>
 
         {/* Scrollable Content */}
-        <div className="mt-28 overflow-y-auto scrollbar-hide  p-5  max-h-[calc(100vh-8rem)  rounded-3xl">{children}</div>
+        <div className="mt-28 overflow-y-auto scrollbar-hide  p-5  max-h-[calc(100vh-8rem)  rounded-3xl">
+          {children}
+          {message && <p className="text-green-600">{message}</p>}
+          </div>
       </div>
     </>
   );

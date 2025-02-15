@@ -9,12 +9,22 @@ function MyState({ children }) {
      email: "",
      password: "",
    });
+
+   const [images, setImages] = useState([]);
+   const [documents, setDocuments] = useState([]);
+   const [media, setMedia] = useState([]);
     return (
         <MyContext.Provider value={{
             otp,
             setOtp,
             formData,
-            setFormData
+            setFormData,
+            images,
+            setImages,
+            documents,
+            setDocuments,
+            media,
+            setMedia
         }}>
             {children}
         </MyContext.Provider>
