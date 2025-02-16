@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import logo from "../../assets/images/logo.png";
 import { FaFolder } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
@@ -7,14 +7,12 @@ import { MdPermMedia } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import "../../App.css"
+import "../../App.css";
 import myContext from "@/Context/MyContext";
 import axios from "axios";
 
-
-
 const Home = ({ children }) => {
-  const context =  useContext(myContext);
+  const context = useContext(myContext);
   const [openMenue, setOpenMenue] = useState(false);
   const [openSideBar, setOpenSideBar] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -30,8 +28,6 @@ const Home = ({ children }) => {
   };
   const isActive = (path) => location.pathname === path;
 
-
-
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -42,18 +38,20 @@ const Home = ({ children }) => {
     try {
       const fileName = encodeURIComponent(file.name);
       const fileType = file.type;
-    
+
       console.log(fileType);
-      const response = await fetch("http://localhost:8000/api/upload-files/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName, fileType }),
-      });
+      const response = await fetch(
+        "http://localhost:8000/api/upload-files/upload",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fileName, fileType }),
+        }
+      );
 
       if (!response.ok) console.log("Failed to get presigned URL");
 
       const { url } = await response.json();
-
 
       const uploadResponse = await fetch(url, {
         method: "PUT",
@@ -68,13 +66,19 @@ const Home = ({ children }) => {
       setMessage(error.message);
     }
   };
-
+  useEffect(() => {
+    loadDocuments();
+    loadImages();
+    loadMedia();
+  }, []);
   const loadDocuments = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/getFile/get-objects/vishal/documents");
-      if(response.status === 200) {
-      const data = response.data;
-      setDocuments(data);
+      const response = await axios.get(
+        "http://localhost:8000/api/getFile/get-objects/vishal/documents"
+      );
+      if (response.status === 200) {
+        const data = response.data;
+        setDocuments(data);
       }
     } catch (error) {
       console.log(error);
@@ -82,10 +86,12 @@ const Home = ({ children }) => {
   };
   const loadImages = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/getFile/get-objects/vishal/images");
-      if(response.status === 200) {
-      const data = response.data;
-      setImages(data);
+      const response = await axios.get(
+        "http://localhost:8000/api/getFile/get-objects/vishal/images"
+      );
+      if (response.status === 200) {
+        const data = response.data;
+        setImages(data);
       }
     } catch (error) {
       console.log(error);
@@ -93,20 +99,21 @@ const Home = ({ children }) => {
   };
   const loadMedia = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/getFile/get-objects/vishal/media");
-      if(response.status === 200) {
-      const data = response.data;
-      setMedia(data);
+      const response = await axios.get(
+        "http://localhost:8000/api/getFile/get-objects/vishal/media"
+      );
+      if (response.status === 200) {
+        const data = response.data;
+        setMedia(data);
       }
     } catch (error) {
       console.log(error);
     }
   };
-  
 
   return (
     <>
-      <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 ">
+      <nav className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 ">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
@@ -251,9 +258,7 @@ const Home = ({ children }) => {
               </li>
             </Link>
             <Link to={"/documents"}>
-              <li
-              onClick={loadDocuments}
-              >
+              <li onClick={loadDocuments}>
                 <a
                   href="#"
                   className={`flex items-center p-2 rounded-full ${
@@ -273,9 +278,7 @@ const Home = ({ children }) => {
               </li>
             </Link>
             <Link to={"/images"}>
-              <li
-              onClick={loadImages}
-              >
+              <li onClick={loadImages}>
                 <a
                   href="#"
                   className={`flex items-center p-2 rounded-full ${
@@ -294,10 +297,7 @@ const Home = ({ children }) => {
               </li>
             </Link>
             <Link to={"/media"}>
-              <li
-              
-              onClick={loadMedia}
-              >
+              <li onClick={loadMedia}>
                 <a
                   href="#"
                   className={`flex items-center p-2 rounded-full ${
@@ -324,9 +324,9 @@ const Home = ({ children }) => {
           setOpenMenue(false);
           setOpenSideBar(false);
         }}
-        className="p-4 sm:ml-64 h-[100vh] rounded-lg dark:border-gray-700 relative   "
+        className=" sm:ml-64 rounded-lg  bg-gray-200 "
       >
-        <div className="fixed top-14 left-0 right-0 sm:left-64 bg-white dark:bg-gray-800 p-4 flex justify-between sm:z-50  items-center border-t-2">
+        <div className="  bg-white dark:bg-gray-800 p-4 flex justify-between  items-center">
           <div className="p-2 px-3 rounded-full flex items-center w-[50%] border-2 border-[#56B8FF]">
             <input
               type="text"
@@ -348,16 +348,15 @@ const Home = ({ children }) => {
               id="fileInput"
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
-            <span className="ml-1 font-medium">{uploading ? "Uploading..." : "Upload"}</span>
-   
+            <span className="ml-1 font-medium">
+              {uploading ? "Uploading..." : "Upload"}
+            </span>
           </div>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="mt-28 overflow-y-auto scrollbar-hide  p-5  max-h-[calc(100vh-8rem)  rounded-3xl">
+        <div className=" w-full rounded-3xl max-h-[calc(100vh-8rem)]  ">
           {children}
-          {message && <p className="text-green-600">{message}</p>}
-          </div>
+        </div>
       </div>
     </>
   );

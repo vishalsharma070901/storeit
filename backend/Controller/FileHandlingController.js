@@ -33,7 +33,7 @@ const listObjectsInFolder = async (req, res) => {
       const subfolder = req.params.subfolder;
       
       const key =  `${folder}/${subfolder}/`;
-      console.log(key)
+  
       const command = new ListObjectsV2Command({
         Bucket: process.env.BUCKET_NAME,
         Prefix: key,
@@ -47,9 +47,8 @@ const listObjectsInFolder = async (req, res) => {
       }
   
       
-      const files = response.Contents.map((item) => item.Key);
-  
-      return res.status(200).json({ files });
+      const files = response.Contents
+      return res.status(200).json(files);
   
     } catch (error) {
       console.error("Error fetching files:", error);
@@ -57,4 +56,26 @@ const listObjectsInFolder = async (req, res) => {
     }
   };
   
-module.exports = { getObject ,listObjectsInFolder};
+  const LisAllObjects = async (req, res) => { 
+    try {
+      const folder =  req.params.folder;
+      const command = new ListObjectsV2Command({
+        Bucket: process.env.BUCKET_NAME,
+        Prefix: folder,
+      });
+  
+      const response = await s3.send(command);
+  
+      if (!response.Contents || response.Contents.length === 0) {
+        return res.status(404).json({ message: "No files found in vishal folder." });
+      }
+  
+      const files = response.Contents;
+      return res.status(200).json(response);
+    } catch (error) {
+      console.error("Error fetching files:", error);
+      res.status(500).json({ error: "Failed to list files" });
+    }
+  };
+
+module.exports = { getObject ,listObjectsInFolder, LisAllObjects};

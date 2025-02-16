@@ -12,7 +12,7 @@ const  fileUploadRouter = require("./Router/fileUploadRoute")
 app.use(cors({
     origin: 'http://localhost:5173'
   }));
-// // AWS S3 Configuration
+
 // const s3 = new AWS.S3({
 //     accessKeyId: process.env.AWS_ACCESS_KEY,
 //     secretAccessKey: process.env.AWS_SECRET_KEY,
@@ -98,7 +98,7 @@ app.use("/api/auth", authRouter )
 app.use("/api/getFile",FileHandelingRouter)
 app.use("/api/upload-files",fileUploadRouter)
 
-// // Start Server
+
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
     connectDb()
