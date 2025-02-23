@@ -5,8 +5,6 @@ import { FaImage, FaVideo, FaMusic } from "react-icons/fa6"; // Import FaMusic f
 import myContext from "@/Context/MyContext";
 import Table from "../Reusable/Table";
 
-
-
 const dummyRows = [
   {
     Key: "documents/report1.pdf",
@@ -119,25 +117,24 @@ const Media = () => {
   const context = useContext(myContext);
   const { media } = context;
 
-  const getMediaIcon = (key) => {
-    const extension = key.split('.').pop().toLowerCase();
-    if (extension === 'mp3' || extension === 'wav' || extension === 'aac') {
-      return <FaMusic />;
-    } else if (extension === 'mp4' || extension === 'avi' || extension === 'mov') {
-      return <FaVideo />;
-    } else {
-      return <IoIosFolderOpen />;
-    }
+  const getTotalSizeInGB = () => {
+    let totalSize = 0;
+    media.forEach((item) => {
+      totalSize += item.Size;
+    });
+
+    return (totalSize / (1024 * 1024 * 1024)).toFixed(2); // Convert to GB & keep 2 decimal places
   };
 
   return (
-    <div className="">
-      <div className="bg-[#56B8FF] text-white rounded-2xl p-4 mx-auto">
-        Media
+    <div className="flex flex-col gap-3 p-2">
+      <div className="flex items-end gap-2 pl-3">
+        <h1 className="text-slate-500 sm:text-5xl text-3xl font-extrabold">Media</h1>
+        <span className="text-slate-500 sm:text-lg text-md font-bold">
+          {getTotalSizeInGB()}GB/ 20GB
+        </span>
       </div>
-        <Table
-        rows={dummyRows}
-        />
+      <Table rows={media} />
     </div>
   );
 };

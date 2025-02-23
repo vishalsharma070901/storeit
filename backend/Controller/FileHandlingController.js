@@ -71,7 +71,7 @@ const listObjectsInFolder = async (req, res) => {
       }
   
       const files = response.Contents;
-      return res.status(200).json(response);
+      return res.status(200).json(files);
     } catch (error) {
       console.error("Error fetching files:", error);
       res.status(500).json({ error: "Failed to list files" });

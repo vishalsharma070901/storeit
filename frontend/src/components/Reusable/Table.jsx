@@ -1,13 +1,30 @@
-import React, { useState } from "react";
+import React from "react";
 import { PiDotsThreeOutlineVertical } from "react-icons/pi";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { FaRegFileWord } from "react-icons/fa";
+import { FaFilePdf } from "react-icons/fa6";
+import { FaFileImage } from "react-icons/fa6";
+import { FaFileVideo } from "react-icons/fa";
+import { MdAudioFile } from "react-icons/md";
+import { FaFileExcel } from "react-icons/fa";
+import { MdDriveFileRenameOutline } from "react-icons/md";
+import { MdDeleteOutline } from "react-icons/md";
+import { TbListDetails } from "react-icons/tb";
+
+
+
+
+
 
 const Table = ({ rows }) => {
-  const [menuVisible, setMenuVisible] = useState(null);
-
-  const toggleMenu = (index) => {
-    setMenuVisible(menuVisible === index ? null : index);
-  };
-
   const getDocName = (docName) => {
     const name = docName.split("/").pop();
     return decodeURIComponent(name);
@@ -34,13 +51,31 @@ const Table = ({ rows }) => {
       return `${size} bytes`;
     }
   };
+  const getIcon = (key) => {
+    const extension = key.split('.').pop().toLowerCase();
+
+  
+    if (['mp3', 'wav', 'aac'].includes(extension)) {
+      return <MdAudioFile className="text-purple-500 text-2xl "/>;
+    } else if (['mp4', 'avi', 'mov'].includes(extension)) {
+      return <FaFileVideo className="text-green-500 text-xl"/>;
+    } else if (extension === 'pdf') {
+      return <FaFilePdf className="text-red-500 text-xl" />;
+    } else if (['doc', 'docx'].includes(extension)) {
+      return <FaRegFileWord className="text-blue-500 text-2xl"  />;
+    } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(extension)) {
+      return <FaFileImage className="text-yellow-500 text-2xl" />;
+    } else {
+      return <IoIosFolderOpen className="text-gray-500"  />;
+    }
+  };
 
   return (
-    <div className="w-full h-full flex flex-col">
-      {/* Table wrapper with scrollable behavior */}
-      <div className="flex-1 overflow-y-auto min-h-[200px] max-h-[calc(100vh-12rem)] scrollbar-hide">
-        <table className="w-full rounded-lg">
-          <thead className="text-gray-700 sticky top-0 z-10 bg-white shadow-sm">
+    <div className="w-full h-full flex flex-col bg-white">
+      {/* Scrollable Table */}
+      <div className="flex-1 overflow-y-auto  max-h-[calc(100vh-12rem)] scrollbar-hide">
+        <table className="w-full rounded-xl">
+          <thead className="text-gray-700 sticky top-0 z-10  shadow-md border-t  border-gray-200">
             <tr>
               <th className="p-3 text-left w-[40%]">Name</th>
               <th className="p-3 text-left hidden md:table-cell w-[30%]">
@@ -54,11 +89,17 @@ const Table = ({ rows }) => {
           </thead>
           <tbody>
             {rows.map((row, index) => (
-              <tr key={index} className="border-t hover:bg-gray-50">
+              <tr key={index} className=" border-b border-b-gray-200 hover:bg-gray-50">
                 <td className="p-3 w-[40%] truncate max-w-[200px]">
-                  <span className="block overflow-hidden text-ellipsis whitespace-nowrap">
+                  <div className="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <span>
+                    {getIcon(row.Key)}
+                  </span>
+                  <span>
                     {getDocName(row.Key)}
                   </span>
+                    </div>
+                  
                 </td>
                 <td className="p-3 text-gray-600 hidden md:table-cell w-[30%]">
                   {formatDate(row.LastModified)}
@@ -66,26 +107,28 @@ const Table = ({ rows }) => {
                 <td className="p-3 text-gray-600 hidden md:table-cell w-[20%]">
                   {getSize(row.Size)}
                 </td>
+           
                 <td className="p-3 flex justify-end w-[10%] relative">
-                  <button
-                    className="text-gray-600 hover:text-gray-800"
-                    onClick={(event) => toggleMenu(index, event)}
-                  >
-                    <PiDotsThreeOutlineVertical />
-                  </button>
-
-                  {menuVisible === index && (
-                    <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 shadow-lg z-50">
-                      <ul className="py-1">
-                        <li className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
-                          Option 1
-                        </li>
-                        <li className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
-                          Option 2
-                        </li>
-                      </ul>
-                    </div>
-                  )}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <PiDotsThreeOutlineVertical />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="bg-gray-100 shadow-xl border-none border  border-gray-200 rounded-md ">
+                      <DropdownMenuLabel> {getDocName(row.Key)}</DropdownMenuLabel>
+                      <DropdownMenuItem onClick={() => console.log("Option 1 clicked")} className="hover:!bg-gray-900 hover:!text-white cursor-pointer transition-colors">
+                        <MdDriveFileRenameOutline/> Rename
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => console.log("Option 2 clicked")}  className="hover:!bg-gray-900 hover:!text-white cursor-pointer transition-colors">
+                      <MdDeleteOutline /> Delete
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => console.log("Option 2 clicked")}  className="hover:!bg-gray-900 hover:!text-white cursor-pointer transition-colors">
+                      <TbListDetails /> Details
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </td>
               </tr>
             ))}
@@ -97,3 +140,5 @@ const Table = ({ rows }) => {
 };
 
 export default Table;
+
+

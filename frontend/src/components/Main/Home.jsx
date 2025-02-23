@@ -4,20 +4,36 @@ import { FaFolder } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import { FaImages } from "react-icons/fa";
 import { MdPermMedia } from "react-icons/md";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import "../../App.css";
 import myContext from "@/Context/MyContext";
 import axios from "axios";
+import { IoCloudOutline } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
+import { set } from "react-hook-form";
+
+
 
 const Home = ({ children }) => {
+  const navigate = useNavigate();
   const context = useContext(myContext);
   const [openMenue, setOpenMenue] = useState(false);
   const [openSideBar, setOpenSideBar] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
-  const { setDocuments, setImages, setMedia } = context;
+  const {
+    setDocuments,
+    setImages,
+    setMedia,
+    setImagesSize,
+    setMediaSize,
+    setDocumenstSize,
+    setMediaLoading,
+    setDocumentLoading,
+    setImageLoading
+  } = context;
 
   const handleMenue = () => {
     setOpenMenue(!openMenue);
@@ -67,31 +83,60 @@ const Home = ({ children }) => {
     }
   };
   useEffect(() => {
-    loadDocuments();
-    loadImages();
-    loadMedia();
+    const fetchData = async () => {
+      await loadDocuments();
+      await loadImages();
+      await loadMedia();
+    };
+
+    fetchData();
   }, []);
+
+  const userName = localStorage.getItem("user-name");
+  const userEmail = localStorage.getItem("user-email");
+
+
   const loadDocuments = async () => {
     try {
+      setDocumentLoading(true);
+      if (!userName) {
+        return;
+      }
+
       const response = await axios.get(
-        "http://localhost:8000/api/getFile/get-objects/vishal/documents"
+        `http://localhost:8000/api/getFile/get-objects/${userName}/documents`
       );
+
       if (response.status === 200) {
         const data = response.data;
         setDocuments(data);
+        let totalSize = data.reduce((acc, item) => acc + item.Size, 0);
+        setDocumenstSize(totalSize);
+        setDocumentLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching documents:", error);
     }
   };
+
   const loadImages = async () => {
     try {
+      setImageLoading(true);
+      if (!userName) {
+        return;
+      }
       const response = await axios.get(
-        "http://localhost:8000/api/getFile/get-objects/vishal/images"
+        `http://localhost:8000/api/getFile/get-objects/${userName}/images`
       );
       if (response.status === 200) {
         const data = response.data;
         setImages(data);
+        let totalSize = 0;
+        response.data.forEach((item) => {
+          totalSize += item.Size;
+        });
+        setImagesSize(totalSize);
+        setImageLoading(false);
       }
     } catch (error) {
       console.log(error);
@@ -99,18 +144,30 @@ const Home = ({ children }) => {
   };
   const loadMedia = async () => {
     try {
+      setMediaLoading(true);
+      if (!userName) {
+        return;
+      }
       const response = await axios.get(
-        "http://localhost:8000/api/getFile/get-objects/vishal/media"
+        `http://localhost:8000/api/getFile/get-objects/${userName}/media`
       );
+
       if (response.status === 200) {
         const data = response.data;
         setMedia(data);
+        let totalSize = data.reduce((acc, item) => acc + item.Size, 0);
+        setMediaSize(totalSize);
+        setMediaLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching media:", error);
     }
   };
-
+  
+  const handleSignout = () => {
+    navigate("/login");
+    context.logout();
+  }
   return (
     <>
       <nav className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 ">
@@ -176,13 +233,13 @@ const Home = ({ children }) => {
                       className="text-sm text-gray-900 dark:text-white"
                       role="none"
                     >
-                      Neil Sims
+                      {userName}
                     </p>
                     <p
                       className="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
                       role="none"
                     >
-                      neil.sims@flowbite.com
+                     {userEmail}
                     </p>
                   </div>
                   <ul className="py-1" role="none">
@@ -215,7 +272,7 @@ const Home = ({ children }) => {
                     </li>
                     <li>
                       <a
-                        href="#"
+                        onClick={handleSignout}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#56B8FF] dark:text-gray-300  dark:hover:text-white"
                         role="menuitem"
                       >
@@ -315,6 +372,31 @@ const Home = ({ children }) => {
                 </a>
               </li>
             </Link>
+            {location.pathname !== "/dashboard" && (
+              <li>
+                <a href="#" className={`flex flex-col gap-4 p-2 rounded-full`}>
+                  <div className="flex">
+                    <span className="text-2xl">
+                      <IoCloudOutline />
+                    </span>
+
+                    <span className="flex-1 ms-3 whitespace-nowrap">
+                      Storage
+                    </span>
+                  </div>
+
+                  <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                    <div
+                      class="bg-[#56B8FF] h-2.5 rounded-full"
+                      style={{ width: "45%" }}
+                    ></div>
+                    <span className="font-normal text-gray-900 text-sm">
+                      2GB/ 20GB
+                    </span>
+                  </div>
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </aside>
@@ -324,7 +406,7 @@ const Home = ({ children }) => {
           setOpenMenue(false);
           setOpenSideBar(false);
         }}
-        className=" sm:ml-64 rounded-lg  bg-gray-200 "
+        className=" sm:ml-64 rounded-lg"
       >
         <div className="  bg-white dark:bg-gray-800 p-4 flex justify-between  items-center">
           <div className="p-2 px-3 rounded-full flex items-center w-[50%] border-2 border-[#56B8FF]">
@@ -354,7 +436,7 @@ const Home = ({ children }) => {
           </div>
         </div>
 
-        <div className=" w-full rounded-3xl max-h-[calc(100vh-8rem)]  ">
+        <div className=" w-full rounded-3xl max-h-[calc(100vh-8rem)] p-3 ">
           {children}
         </div>
       </div>

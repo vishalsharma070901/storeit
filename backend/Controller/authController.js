@@ -10,6 +10,11 @@ const register = asyncHandler(async (req, res) => {
     const { username, email, password } = req.body;
 
     const userExist = await User.findOne({ email });
+    const usernameExist = await User.findOne({ username });
+
+    if (usernameExist) {
+      return res.status(409).json({ extraDetails: "Username already exist" });
+    }
 
     if (userExist) {
       return res.status(409).json({ extraDetails: "Email already exist" });
@@ -25,6 +30,7 @@ const register = asyncHandler(async (req, res) => {
     res.status(201).json({
       message: "Registration Sucessfull",
       createUser,
+      token: await createUser.generateToken(),
     });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
@@ -45,7 +51,9 @@ const login = asyncHandler(async (req, res) => {
     if (isPasswordValid) {
       res.status(201).json({
         extraDetails: "Login Sucessfull",
+        token: await emailExist.generateToken(),
         userId: emailExist._id.toString(),
+        
       });
     } else {
       res.status(400).json({ extraDetails: "Invalid email or password" });
@@ -113,4 +121,14 @@ const otpVerification = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { register, login, otpVerification };
+const user = asyncHandler(async (req, res) => {
+  try {
+    const userData = req.user;
+    res.status(200).json(userData);
+  } catch (error) {
+    console.log(` error from user route ${error}`);
+  }
+});;
+
+
+module.exports = { register, login, otpVerification, user };

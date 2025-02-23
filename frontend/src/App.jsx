@@ -13,6 +13,7 @@ import Dashboard from './components/Main/Dashboard'
 import Images from './components/Main/Images'
 import Media from './components/Main/Media'
 import Documents from './components/Main/Documents'
+import ProtectedRoute from './components/Main/ProtectedRoute';
 function App() {
   const [count, setCount] = useState(0)
 
@@ -28,10 +29,12 @@ function App() {
     <Route path="/" element={<Navigate to="/login" replace />}/>
     <Route path="/login" element={<Layout><Login /></Layout>} />
     <Route path="/register" element={<Layout><Register /></Layout>}/>
+    <Route element={<ProtectedRoute/>}>
     <Route path='/dashboard' element={<Home><Dashboard/></Home>}/>
     <Route path='/images' element={<Home><Images/> </Home>}/>
     <Route path='/documents' element={<Home><Documents/></Home>}/>
     <Route path='/media' element={<Home><Media/></Home>}/>
+    </Route>
 
     </Routes>
   </Router>

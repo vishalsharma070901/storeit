@@ -1,103 +1,38 @@
 "use client";
-import React from "react";
-import { TrendingUp } from "lucide-react";
-import {
-    Label,
-  PolarGrid,
-  PolarRadiusAxis,
-  RadialBar,
-  RadialBarChart,
-} from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
-const chartData = [
-  { browser: "safari", visitors: 200, }, // Use a static color
-];
-
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  safari: {
-    label: "Safari",
-    color: "#56B8FF",
-  },
-};
+import React, { useEffect } from "react";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css"; 
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 const Chart = () => {
+  const initialSize = localStorage.getItem("user-total-size");
+  const usedSize = localStorage.getItem("user-used-size");
+  const percentage = (usedSize / initialSize) * 100;
+  
+  useEffect(() => {
+  }, [percentage, initialSize, usedSize]);
   return (
-    <Card className=" flex items-center w-full bg-[#56B8FF] ">
-    
-      <CardContent className=" pb-0">
-        <div className="mx-auto">
-          <RadialBarChart
-            data={chartData}
-            width={250}
-            height={250}
-            startAngle={10}
-            endAngle={200}
-            innerRadius={80}
-            outerRadius={110}
-            
-            
-          >
-            
-            <PolarGrid           
-             gridType="circle"
-              radialLines={false}
-              stroke="none"
-              className="bg-gray-500"
-              polarRadius={[86, 74]} />
-            <RadialBar
-              dataKey="visitors"
-              background
-              cornerRadius={10}
-            />
-            <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}> 
-            <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-4xl font-bold"
-                        >
-                          {chartData[0].visitors.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                        >
-                          Space Used
-                        </tspan>
-                      </text>
-                    )
-                  }
-                }}
-              />
-            </PolarRadiusAxis>
-          </RadialBarChart>
+    <Card className="flex  items-center w-full bg-[#56B8FF] rounded-xl border-none p-5">
+      <CardContent className="flex justify-center items-center">
+        <div className="w-32 h-32 md:w-44 md:h-44 lg:w-52 lg:h-44">
+          <CircularProgressbar
+            value={percentage}
+            text={`${percentage}% `}
+            circleRatio={0.75} 
+            styles={buildStyles({
+              rotation: 1 / 2 + 1 / 8, 
+              strokeLinecap: "round", 
+              pathColor: "#ffffff",
+              trailColor: "#d6d6d6", 
+              textColor: "#ffffff", 
+            })}
+          />
         </div>
       </CardContent>
-      <CardHeader className="">
-        <CardTitle className="chart-title">Available Storage</CardTitle>
-        <CardDescription className="chart-description">
-          2GB / 2GB
+      <CardHeader className="text-center mt-4">
+        <CardTitle className="text-white text-lg md:text-2xl">Available Storage</CardTitle>
+        <CardDescription className="text-white text-sm md:text-lg">
+          {!usedSize ? 0: usedSize / (1024 * 1024 * 1024 )}GB / {!initialSize ? "0GB": initialSize / (1024 * 1024 * 1024)} GB
         </CardDescription>
       </CardHeader>
     </Card>

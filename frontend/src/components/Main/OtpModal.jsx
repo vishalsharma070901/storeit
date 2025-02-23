@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const OtpModal = ({ email, username, setOpen, open }) => {
   const navigate = useNavigate();
   const context = useContext(myContext);
-  const { setOtp, otp , formData} = context;
+  const { setOtp, otp , formData,getUserDetails,setTokenInLocalStorage} = context;
   const [loading, setLoading] = useState(false);
   console.log(otp);
   const inputRefs = useRef([]);
@@ -67,8 +67,9 @@ const OtpModal = ({ email, username, setOpen, open }) => {
         password: formData.password,
         }     
       );
-      console.log(respose.data);
-      console.log(respose.data);
+      if(respose.status === 200){
+        navigate("/login");
+      }
     } catch (error) { 
 
       console.log(error); 
