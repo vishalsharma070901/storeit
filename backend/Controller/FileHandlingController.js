@@ -1,4 +1,4 @@
-const { S3Client, GetObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
+const { S3Client, GetObjectCommand, ListObjectsV2Command, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 
 const s3 = new S3Client({
@@ -78,4 +78,24 @@ const listObjectsInFolder = async (req, res) => {
     }
   };
 
-module.exports = { getObject ,listObjectsInFolder, LisAllObjects};
+  const deleteObject =  async (req, res) => {
+    try {
+      const key = req.params.key;
+      console.log(key)
+      const command = new DeleteObjectCommand({
+        Bucket: process.env.BUCKET_NAME,
+        Key: "vishal/documents/Doc1.pdf",
+      });
+  
+      const response = await s3.send(command);
+      return res.status(200).json({response, message: "File deleted successfully" });
+    } 
+    catch (error) {
+      console.error("Error deleting file:", error);
+      return res.status(500).json({ error: "Failed to delete file" });
+    }
+  } 
+  
+
+
+module.exports = { getObject ,listObjectsInFolder, LisAllObjects, deleteObject};

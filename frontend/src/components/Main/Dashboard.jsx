@@ -15,7 +15,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const context = useContext(myContext);
   const { imagesSize, mediaSize, documentsSize, imageLoading, documentLoading,mediaLoading } = context;
-  const [cardsLoading, setCardsLoading] = useState(true);
+  const [cardsLoading, setCardsLoading] = useState(false);
 
   const cardDetails = [
     { id: 1, title: "Images", icon: <FaFileImage />, totalSize: imagesSize },
@@ -76,10 +76,12 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    if(!imageLoading && !documentLoading && !mediaLoading) {
       setCardsLoading(false);
-    }, 5000);
-  }, []);
+    } else {
+      setCardsLoading(true);
+    }
+  }, [imageLoading, documentLoading, mediaLoading]);
 
   const renderCardSkeleton = () => (
     <div className="w-full h-32 bg-gray-300 rounded-xl animate-pulse flex flex-col justify-center items-center">

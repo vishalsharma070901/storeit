@@ -17,6 +17,12 @@ import { set } from "react-hook-form";
 
 
 const Home = ({ children }) => {
+    const initialSize = Number(localStorage.getItem("user-total-size")) || 0;
+    const usedSize = Number(localStorage.getItem("user-used-size")) || 0;
+  
+    const percentage = initialSize > 0 ? ((usedSize / initialSize) * 100).toFixed(2) : 0;
+  
+    useEffect(() => {}, [percentage, initialSize, usedSize]);
   const navigate = useNavigate();
   const context = useContext(myContext);
   const [openMenue, setOpenMenue] = useState(false);
@@ -233,7 +239,7 @@ const Home = ({ children }) => {
                       className="text-sm text-gray-900 dark:text-white"
                       role="none"
                     >
-                      {userName}
+                      Hi!{" "}{userName}
                     </p>
                     <p
                       className="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
@@ -388,10 +394,11 @@ const Home = ({ children }) => {
                   <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
                     <div
                       class="bg-[#56B8FF] h-2.5 rounded-full"
-                      style={{ width: "45%" }}
+                      style={{ width: percentage + "%" }}
                     ></div>
                     <span className="font-normal text-gray-900 text-sm">
-                      2GB/ 20GB
+                    {(usedSize / (1024 * 1024 * 1024)).toFixed(2)} GB / {(initialSize / (1024 * 1024 * 1024)).toFixed(2)} GB
+
                     </span>
                   </div>
                 </a>

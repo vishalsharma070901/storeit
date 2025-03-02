@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { PiDotsThreeOutlineVertical } from "react-icons/pi";
 import {
   DropdownMenu,
@@ -14,17 +14,21 @@ import { FaFilePdf } from "react-icons/fa6";
 import { FaFileImage } from "react-icons/fa6";
 import { FaFileVideo } from "react-icons/fa";
 import { MdAudioFile } from "react-icons/md";
-import { FaFileExcel } from "react-icons/fa";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
 import { TbListDetails } from "react-icons/tb";
-
+import RenameModal from "../Main/RenameModal";
+import OtherModal from "./OtherModal";
+import DeleteModal from "../Main/DeleteModal";
 
 
 
 
 
 const Table = ({ rows }) => {
+    const [renameModalOpen, setRenameModalOpen] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
   const getDocName = (docName) => {
     const name = docName.split("/").pop();
     return decodeURIComponent(name);
@@ -72,10 +76,10 @@ const Table = ({ rows }) => {
 
   return (
     <div className="w-full h-full flex flex-col bg-white">
-      {/* Scrollable Table */}
+
       <div className="flex-1 overflow-y-auto  max-h-[calc(100vh-12rem)] scrollbar-hide">
         <table className="w-full rounded-xl">
-          <thead className="text-gray-700 sticky top-0 z-10  shadow-md border-t  border-gray-200">
+          <thead className="text-gray-700 sticky top-0 z-10  shadow-md border-t bg-white  border-gray-200">
             <tr>
               <th className="p-3 text-left w-[40%]">Name</th>
               <th className="p-3 text-left hidden md:table-cell w-[30%]">
@@ -89,6 +93,8 @@ const Table = ({ rows }) => {
           </thead>
           <tbody>
             {rows.map((row, index) => (
+              <> 
+              
               <tr key={index} className=" border-b border-b-gray-200 hover:bg-gray-50">
                 <td className="p-3 w-[40%] truncate max-w-[200px]">
                   <div className="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
@@ -115,26 +121,36 @@ const Table = ({ rows }) => {
                         <PiDotsThreeOutlineVertical />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-gray-100 shadow-xl border-none border  border-gray-200 rounded-md ">
-                      <DropdownMenuLabel> {getDocName(row.Key)}</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => console.log("Option 1 clicked")} className="hover:!bg-gray-900 hover:!text-white cursor-pointer transition-colors">
+                    <DropdownMenuContent align="end" className="bg-white shadow-xl border-none border  border-gray-200 rounded-xl p-2 w-52 ">
+                      <DropdownMenuLabel className="p-2"> {getDocName(row.Key)}</DropdownMenuLabel>
+                      <DropdownMenuItem onClick={() => setRenameModalOpen(true)} className="hover:!bg-[#56B8FF] hover:!text-white cursor-pointer transition-colors">
                         <MdDriveFileRenameOutline/> Rename
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => console.log("Option 2 clicked")}  className="hover:!bg-gray-900 hover:!text-white cursor-pointer transition-colors">
+                      <DropdownMenuItem onClick={() => setDeleteModalOpen(true)}  className="hover:!bg-[#56B8FF] hover:!text-white cursor-pointer transition-colors">
                       <MdDeleteOutline /> Delete
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => console.log("Option 2 clicked")}  className="hover:!bg-gray-900 hover:!text-white cursor-pointer transition-colors">
+                      <DropdownMenuItem onClick={() => console.log("Option 2 clicked")}  className="hover:!bg-[#56B8FF] hover:!text-white cursor-pointer transition-colors">
                       <TbListDetails /> Details
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </td>
               </tr>
+              <OtherModal open={renameModalOpen} setOpen={setRenameModalOpen}>
+                <RenameModal fileName={getDocName(row.Key)}/>
+              </OtherModal>
+
+              <OtherModal open={deleteModalOpen} setOpen={setDeleteModalOpen}>
+                <DeleteModal fileName={getDocName(row.Key)}/>
+              </OtherModal>
+              </>
             ))}
+
           </tbody>
         </table>
       </div>
+     
     </div>
   );
 };

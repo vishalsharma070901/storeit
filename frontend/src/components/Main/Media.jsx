@@ -127,14 +127,14 @@ const Media = () => {
   };
 
   return (
-    <div className="flex flex-col gap-3 p-2">
+    <div className="flex flex-col  ">
       <div className="flex items-end gap-2 pl-3">
         <h1 className="text-slate-500 sm:text-5xl text-3xl font-extrabold">Media</h1>
         <span className="text-slate-500 sm:text-lg text-md font-bold">
           {getTotalSizeInGB()}GB/ 20GB
         </span>
       </div>
-      <Table rows={media} />
+      <Table rows={dummyRows} />
     </div>
   );
 };
