@@ -1,172 +1,140 @@
-import React from "react";
+import React, { useContext } from "react";
 import NormalCard from "../Reusable/NormalCard";
 import { IoIosFolderOpen } from "react-icons/io";
-import { FaImage, FaVideo } from "react-icons/fa6";
-import { IoPieChartSharp } from "react-icons/io5";
+import { FaImage, FaVideo, FaMusic } from "react-icons/fa6"; // Import FaMusic for audio icon
+import myContext from "@/Context/MyContext";
+import Table from "../Reusable/Table";
 
-const cardDetails = [
+const dummyRows = [
   {
-    id: 1,
-    title: "Card 1",
-    description: "This is the first card",
-    icon: <IoIosFolderOpen />,
+    Key: "documents/report1.pdf",
+    LastModified: "2023-10-01T10:00:00Z",
+    Size: 1234567,
   },
   {
-    id: 2,
-    title: "Card 2",
-    description: "This is the second card",
-    icon: <FaImage />,
+    Key: "images/photo1.jpg",
+    LastModified: "2023-09-15T14:30:00Z",
+    Size: 234567,
   },
   {
-    id: 3,
-    title: "Card 3",
-    description: "This is the third card",
-    icon: <FaVideo />,
+    Key: "videos/video1.mp4",
+    LastModified: "2023-08-20T08:45:00Z",
+    Size: 3456789,
   },
   {
-    id: 4,
-    title: "Card 4",
-    description: "This is the fourth card",
-    icon: <IoPieChartSharp />,
+    Key: "documents/report2.pdf",
+    LastModified: "2023-07-10T12:00:00Z",
+    Size: 456789,
   },
   {
-    id: 5,
-    title: "Card 5",
-    description: "This is the fifth card",
-    icon: <IoPieChartSharp />,
+    Key: "images/photo2.jpg",
+    LastModified: "2023-06-05T16:15:00Z",
+    Size: 567890,
   },
   {
-    id: 6,
-    title: "Card 6",
-    description: "This is the sixth card",
-    icon: <IoPieChartSharp />,
+    Key: "documents/report1.pdf",
+    LastModified: "2023-10-01T10:00:00Z",
+    Size: 1234567,
   },
   {
-    id: 7,
-    title: "Card 7",
-    description: "This is the seventh card",
-    icon: <IoPieChartSharp />,
+    Key: "images/photo1.jpg",
+    LastModified: "2023-09-15T14:30:00Z",
+    Size: 234567,
   },
   {
-    id: 8,
-    title: "Card 8",
-    description: "This is the eighth card",
-    icon: <IoPieChartSharp />,
+    Key: "videos/video1.mp4",
+    LastModified: "2023-08-20T08:45:00Z",
+    Size: 3456789,
   },
   {
-    id: 9,
-    title: "Card 9",
-    description: "This is the ninth card",
-    icon: <IoIosFolderOpen />,
+    Key: "documents/report2.pdf",
+    LastModified: "2023-07-10T12:00:00Z",
+    Size: 456789,
   },
   {
-    id: 10,
-    title: "Card 10",
-    description: "This is the tenth card",
-    icon: <FaImage />,
+    Key: "images/photo2.jpg",
+    LastModified: "2023-06-05T16:15:00Z",
+    Size: 567890,
   },
   {
-    id: 11,
-    title: "Card 11",
-    description: "This is the eleventh card",
-    icon: <FaVideo />,
+    Key: "documents/report1.pdf",
+    LastModified: "2023-10-01T10:00:00Z",
+    Size: 1234567,
   },
   {
-    id: 12,
-    title: "Card 12",
-    description: "This is the twelfth card",
-    icon: <IoPieChartSharp />,
+    Key: "images/photo1.jpg",
+    LastModified: "2023-09-15T14:30:00Z",
+    Size: 234567,
   },
   {
-    id: 13,
-    title: "Card 1",
-    description: "This is the first card",
-    icon: <IoIosFolderOpen />,
+    Key: "videos/video1.mp4",
+    LastModified: "2023-08-20T08:45:00Z",
+    Size: 3456789,
   },
   {
-    id: 14,
-    title: "Card 2",
-    description: "This is the second card",
-    icon: <FaImage />,
+    Key: "documents/report2.pdf",
+    LastModified: "2023-07-10T12:00:00Z",
+    Size: 456789,
   },
   {
-    id: 3,
-    title: "Card 3",
-    description: "This is the third card",
-    icon: <FaVideo />,
+    Key: "images/photo2.jpg",
+    LastModified: "2023-06-05T16:15:00Z",
+    Size: 567890,
   },
   {
-    id: 4,
-    title: "Card 4",
-    description: "This is the fourth card",
-    icon: <IoPieChartSharp />,
+    Key: "images/photo2.jpg",
+    LastModified: "2023-06-05T16:15:00Z",
+    Size: 567890,
   },
   {
-    id: 5,
-    title: "Card 5",
-    description: "This is the fifth card",
-    icon: <IoPieChartSharp />,
+    Key: "documents/report1.pdf",
+    LastModified: "2023-10-01T10:00:00Z",
+    Size: 1234567,
   },
   {
-    id: 6,
-    title: "Card 6",
-    description: "This is the sixth card",
-    icon: <IoPieChartSharp />,
+    Key: "images/photo1.jpg",
+    LastModified: "2023-09-15T14:30:00Z",
+    Size: 234567,
   },
   {
-    id: 7,
-    title: "Card 7",
-    description: "This is the seventh card",
-    icon: <IoPieChartSharp />,
+    Key: "videos/video1.mp4",
+    LastModified: "2023-08-20T08:45:00Z",
+    Size: 3456789,
   },
   {
-    id: 8,
-    title: "Card 8",
-    description: "This is the eighth card",
-    icon: <IoPieChartSharp />,
+    Key: "documents/report2.pdf",
+    LastModified: "2023-07-10T12:00:00Z",
+    Size: 456789,
   },
   {
-    id: 9,
-    title: "Card 9",
-    description: "This is the ninth card",
-    icon: <IoIosFolderOpen />,
-  },
-  {
-    id: 10,
-    title: "Card 10",
-    description: "This is the tenth card",
-    icon: <FaImage />,
-  },
-  {
-    id: 11,
-    title: "Card 11",
-    description: "This is the eleventh card",
-    icon: <FaVideo />,
-  },
-  {
-    id: 12,
-    title: "Card 12",
-    description: "This is the twelfth card",
-    icon: <IoPieChartSharp />,
+    Key: "images/photo2.jpg",
+    LastModified: "2023-06-05T16:15:00Z",
+    Size: 567890,
   },
 ];
 
 const Media = () => {
+  const context = useContext(myContext);
+  const { media } = context;
+
+  const getTotalSizeInGB = () => {
+    let totalSize = 0;
+    media.forEach((item) => {
+      totalSize += item.Size;
+    });
+
+    return (totalSize / (1024 * 1024 * 1024)).toFixed(2); // Convert to GB & keep 2 decimal places
+  };
+
   return (
-    <div>
-      <div className="bg-[#56B8FF] text-white  rounded-2xl p-4 mx-auto">
-        Media
+    <div className="flex flex-col  ">
+      <div className="flex items-end gap-2 pl-3">
+        <h1 className="text-slate-500 sm:text-5xl text-3xl font-extrabold">Media</h1>
+        <span className="text-slate-500 sm:text-lg text-md font-bold">
+          {getTotalSizeInGB()}GB/ 20GB
+        </span>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 pt-4">
-        {cardDetails.map((card, index) => (
-          <NormalCard
-            key={index}
-            title={card.title}
-            description={card.description}
-            icon={card.icon}
-          />
-        ))}
-      </div>
+      <Table rows={dummyRows} />
     </div>
   );
 };

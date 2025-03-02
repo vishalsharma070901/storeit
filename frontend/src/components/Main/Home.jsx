@@ -1,17 +1,45 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import logo from "../../assets/images/logo.png";
 import { FaFolder } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import { FaImages } from "react-icons/fa";
 import { MdPermMedia } from "react-icons/md";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import "../../App.css"
+import "../../App.css";
+import myContext from "@/Context/MyContext";
+import axios from "axios";
+import { IoCloudOutline } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
+import { set } from "react-hook-form";
+
+
 
 const Home = ({ children }) => {
+    const initialSize = Number(localStorage.getItem("user-total-size")) || 0;
+    const usedSize = Number(localStorage.getItem("user-used-size")) || 0;
+  
+    const percentage = initialSize > 0 ? ((usedSize / initialSize) * 100).toFixed(2) : 0;
+  
+    useEffect(() => {}, [percentage, initialSize, usedSize]);
+  const navigate = useNavigate();
+  const context = useContext(myContext);
   const [openMenue, setOpenMenue] = useState(false);
   const [openSideBar, setOpenSideBar] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState("");
+  const {
+    setDocuments,
+    setImages,
+    setMedia,
+    setImagesSize,
+    setMediaSize,
+    setDocumenstSize,
+    setMediaLoading,
+    setDocumentLoading,
+    setImageLoading
+  } = context;
 
   const handleMenue = () => {
     setOpenMenue(!openMenue);
@@ -22,9 +50,133 @@ const Home = ({ children }) => {
   };
   const isActive = (path) => location.pathname === path;
 
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    setMessage("");
+
+    try {
+      const fileName = encodeURIComponent(file.name);
+      const fileType = file.type;
+
+      console.log(fileType);
+      const response = await fetch(
+        "http://localhost:8000/api/upload-files/upload",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fileName, fileType }),
+        }
+      );
+
+      if (!response.ok) console.log("Failed to get presigned URL");
+
+      const { url } = await response.json();
+
+      const uploadResponse = await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": fileType },
+        body: file,
+      });
+
+      if (!uploadResponse.ok) throw new Error("Upload failed");
+
+      setMessage("File uploaded successfully!");
+    } catch (error) {
+      setMessage(error.message);
+    }
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      await loadDocuments();
+      await loadImages();
+      await loadMedia();
+    };
+
+    fetchData();
+  }, []);
+
+  const userName = localStorage.getItem("user-name");
+  const userEmail = localStorage.getItem("user-email");
+
+
+  const loadDocuments = async () => {
+    try {
+      setDocumentLoading(true);
+      if (!userName) {
+        return;
+      }
+
+      const response = await axios.get(
+        `http://localhost:8000/api/getFile/get-objects/${userName}/documents`
+      );
+
+      if (response.status === 200) {
+        const data = response.data;
+        setDocuments(data);
+        let totalSize = data.reduce((acc, item) => acc + item.Size, 0);
+        setDocumenstSize(totalSize);
+        setDocumentLoading(false);
+      }
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+    }
+  };
+
+  const loadImages = async () => {
+    try {
+      setImageLoading(true);
+      if (!userName) {
+        return;
+      }
+      const response = await axios.get(
+        `http://localhost:8000/api/getFile/get-objects/${userName}/images`
+      );
+      if (response.status === 200) {
+        const data = response.data;
+        setImages(data);
+        let totalSize = 0;
+        response.data.forEach((item) => {
+          totalSize += item.Size;
+        });
+        setImagesSize(totalSize);
+        setImageLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const loadMedia = async () => {
+    try {
+      setMediaLoading(true);
+      if (!userName) {
+        return;
+      }
+      const response = await axios.get(
+        `http://localhost:8000/api/getFile/get-objects/${userName}/media`
+      );
+
+      if (response.status === 200) {
+        const data = response.data;
+        setMedia(data);
+        let totalSize = data.reduce((acc, item) => acc + item.Size, 0);
+        setMediaSize(totalSize);
+        setMediaLoading(false);
+      }
+    } catch (error) {
+      console.error("Error fetching media:", error);
+    }
+  };
+  
+  const handleSignout = () => {
+    navigate("/login");
+    context.logout();
+  }
   return (
     <>
-      <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 ">
+      <nav className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 ">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
@@ -87,13 +239,13 @@ const Home = ({ children }) => {
                       className="text-sm text-gray-900 dark:text-white"
                       role="none"
                     >
-                      Neil Sims
+                      Hi!{" "}{userName}
                     </p>
                     <p
                       className="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
                       role="none"
                     >
-                      neil.sims@flowbite.com
+                     {userEmail}
                     </p>
                   </div>
                   <ul className="py-1" role="none">
@@ -126,7 +278,7 @@ const Home = ({ children }) => {
                     </li>
                     <li>
                       <a
-                        href="#"
+                        onClick={handleSignout}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#56B8FF] dark:text-gray-300  dark:hover:text-white"
                         role="menuitem"
                       >
@@ -169,7 +321,7 @@ const Home = ({ children }) => {
               </li>
             </Link>
             <Link to={"/documents"}>
-              <li>
+              <li onClick={loadDocuments}>
                 <a
                   href="#"
                   className={`flex items-center p-2 rounded-full ${
@@ -189,7 +341,7 @@ const Home = ({ children }) => {
               </li>
             </Link>
             <Link to={"/images"}>
-              <li>
+              <li onClick={loadImages}>
                 <a
                   href="#"
                   className={`flex items-center p-2 rounded-full ${
@@ -208,7 +360,7 @@ const Home = ({ children }) => {
               </li>
             </Link>
             <Link to={"/media"}>
-              <li>
+              <li onClick={loadMedia}>
                 <a
                   href="#"
                   className={`flex items-center p-2 rounded-full ${
@@ -226,6 +378,32 @@ const Home = ({ children }) => {
                 </a>
               </li>
             </Link>
+            {location.pathname !== "/dashboard" && (
+              <li>
+                <a href="#" className={`flex flex-col gap-4 p-2 rounded-full`}>
+                  <div className="flex">
+                    <span className="text-2xl">
+                      <IoCloudOutline />
+                    </span>
+
+                    <span className="flex-1 ms-3 whitespace-nowrap">
+                      Storage
+                    </span>
+                  </div>
+
+                  <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                    <div
+                      class="bg-[#56B8FF] h-2.5 rounded-full"
+                      style={{ width: percentage + "%" }}
+                    ></div>
+                    <span className="font-normal text-gray-900 text-sm">
+                    {(usedSize / (1024 * 1024 * 1024)).toFixed(2)} GB / {(initialSize / (1024 * 1024 * 1024)).toFixed(2)} GB
+
+                    </span>
+                  </div>
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </aside>
@@ -235,9 +413,9 @@ const Home = ({ children }) => {
           setOpenMenue(false);
           setOpenSideBar(false);
         }}
-        className="p-4 sm:ml-64 h-[100vh] rounded-lg dark:border-gray-700 relative  "
+        className=" sm:ml-64 rounded-lg"
       >
-        <div className="fixed top-14 left-0 right-0 sm:left-64 bg-white dark:bg-gray-800 p-4 flex justify-between  items-center border-t-2">
+        <div className="  bg-white dark:bg-gray-800 p-4 flex justify-between  items-center">
           <div className="p-2 px-3 rounded-full flex items-center w-[50%] border-2 border-[#56B8FF]">
             <input
               type="text"
@@ -254,16 +432,20 @@ const Home = ({ children }) => {
               <FaCloudUploadAlt />
             </span>
             <input
+              onChange={handleFileUpload}
               type="file"
               id="fileInput"
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
-            <span className="ml-1 font-medium">Upload</span>
+            <span className="ml-1 font-medium">
+              {uploading ? "Uploading..." : "Upload"}
+            </span>
           </div>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="mt-28 overflow-y-auto scrollbar-hide  p-5  max-h-[calc(100vh-8rem)] bg-gray-100  rounded-3xl">{children}</div>
+        <div className=" w-full rounded-3xl max-h-[calc(100vh-8rem)] p-3 ">
+          {children}
+        </div>
       </div>
     </>
   );
